@@ -50,6 +50,11 @@ const url = require('url');
 //Ch.11 Creating a Simple Webserver
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//***top-level code will only be executed once when program starts, so using synchronous readfile here is not a problam
+//*** __dirname = current directory ***
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+const dataObj = JSON.parse(data);
+
 //Creating a webserver and return response if there's request
 const server = http.createServer((req, res) => {
     // Ch.12 Routing
@@ -62,6 +67,10 @@ const server = http.createServer((req, res) => {
     }
     else if(pathName === '/product'){
         res.end('This is the PRODUCT');
+    }
+    else if(pathName === '/api'){
+        res.writeHead(200, {'Content-type': 'application/json'});
+        res.end(data);
     }
     else{
         res.writeHead(404, {
@@ -82,6 +91,8 @@ server.listen(8000, '127.0.0.1', () => {
 });
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
-// Ch.12 Routing
+// Ch.13 Building a very simple API
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
