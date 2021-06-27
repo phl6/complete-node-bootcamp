@@ -38,8 +38,9 @@ const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simpl
 //---------------
 // Routing      
 //---------------
-//Ch52 Handling GET Requests
-app.get('/api/v1/tours', (req, res) => {
+
+//Ch57 Refactoring Our Routes
+const getAllTours = (req, res) => {
     res.status(200).json({ //Jsend JSON Formatting Standard
         status: 'success',
         results: tours.length, //better visualisation for requesters
@@ -47,10 +48,9 @@ app.get('/api/v1/tours', (req, res) => {
             tours
         }
     });
-});
+};
 
-//Ch54 Responding to URL Parameters
-app.get('/api/v1/tours/:id', (req, res) => {
+const getTour = (req, res) => {
     console.log(req.params);
 
     const id = +req.params.id; //turn obj to number
@@ -72,10 +72,9 @@ app.get('/api/v1/tours/:id', (req, res) => {
             tour
         }
     });
-});
+};
 
-//Ch53 Handling POST Requests
-app.post('/api/v1/tours', (req, res) => {
+const createTour = (req, res) => {
     // console.log(req.body); 
 
     // adding id to the new object which is saved to our ficitonal data later
@@ -106,11 +105,9 @@ app.post('/api/v1/tours', (req, res) => {
         })
     })
     // res.send('Done'); //always need to send back response to complete req/res cycle
-});
+};
 
-//Ch55 Handling PATCH Request
-app.patch('/api/v1/tours/:id', (req, res) => {
-
+const updateTour = (req, res) => {
     if (+req.params.id > tours.length) {
         return res.status(404).json({
             status: 'fail',
@@ -124,12 +121,9 @@ app.patch('/api/v1/tours/:id', (req, res) => {
             tour: '<Updated tour here...'
         }
     })
+};
 
-});
-
-//Ch56 Handling DELETE Request
-app.delete('/api/v1/tours/:id', (req, res) => {
-
+const deleteTour = (req, res) => {
     if (+req.params.id > tours.length) {
         return res.status(404).json({
             status: 'fail',
@@ -142,7 +136,26 @@ app.delete('/api/v1/tours/:id', (req, res) => {
         data: null
     })
 
-});
+};
+
+//Refactored
+// app.get('/api/v1/tours', getAllTours); //Ch52 Handling GET Requests
+// app.get('/api/v1/tours/:id', getTour); //Ch54 Responding to URL Parameters
+// app.post('/api/v1/tours', createTour); //Ch53 Handling POST Requests
+// app.patch('/api/v1/tours/:id', updateTour); //Ch55 Handling PATCH Request
+// app.delete('/api/v1/tours/:id', deleteTour); //Ch56 Handling DELETE Request
+
+//Further Refactor
+app
+    .route('/api/v1/tours')
+    .get(getAllTours)
+    .post(createTour);
+
+app
+    .route('/api/v1/tours/:id')
+    .get(getTour)
+    .patch(updateTour)
+    .delete(deleteTour);
 
 const port = 3000;
 app.listen(port, () => {
