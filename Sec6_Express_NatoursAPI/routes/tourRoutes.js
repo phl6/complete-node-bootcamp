@@ -5,6 +5,9 @@ const tourController = require('./../controllers/tourController');
 // Routers
 const router = express.Router();
 
+//ch64 Param
+router.param('id', tourController.checkID);
+
 //Routes
 router
     .route('/')
