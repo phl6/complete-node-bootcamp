@@ -12,7 +12,6 @@ app.use(express.json()); //ch53, express.json() is a middleware that handles inc
 //Ch59 Using Third Party Middleware
 app.use(morgan('dev'));
 
-
 //Ch58 Creating Our Own Middleware
 //every request will go through this middleware function (order matters)
 app.use((req, res, next) => {
@@ -133,6 +132,41 @@ const deleteTour = (req, res) => {
 
 };
 
+const getAllUsrs = (req, res) => {
+    res.status(500).json({
+        status: 'error',
+        message: 'This route is not yet defined'
+    });
+};
+
+const getUser = (req, res) => {
+    res.status(500).json({
+        status: 'error',
+        message: 'This route is not yet defined'
+    });
+};
+
+const createUser = (req, res) => {
+    res.status(500).json({
+        status: 'error',
+        message: 'This route is not yet defined'
+    });
+};
+
+const updateUser = (req, res) => {
+    res.status(500).json({
+        status: 'error',
+        message: 'This route is not yet defined'
+    });
+};
+
+const deleteUser = (req, res) => {
+    res.status(500).json({
+        status: 'error',
+        message: 'This route is not yet defined'
+    });
+};
+
 //---------------
 //3) Routes  
 //---------------
@@ -156,6 +190,16 @@ app
     .patch(updateTour)
     .delete(deleteTour);
 
+app
+    .route('/api/v1/users')
+    .get(getAllUsrs)
+    .post(createUser);
+
+app
+    .route('/api/v1/users/:id')
+    .get(getUser)
+    .patch(updateUser)
+    .delete(deleteUser);
 
 //----------------
 //4) Start Server
