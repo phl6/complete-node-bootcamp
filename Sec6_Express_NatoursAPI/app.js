@@ -7,14 +7,19 @@ const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 
 const app = express();
-app.use(express.json()); //ch53, express.json() is a middleware that handles incoming request data
 
 //---------------
 //1) Middlewares
 //---------------
+//ch67 Environment Variables
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev')); //Ch59 Using Third Party Middleware
+}
 
-//Ch59 Using Third Party Middleware
-app.use(morgan('dev'));
+app.use(express.json()); //ch53, express.json() is a middleware that handles incoming request data
+app.use(express.static(`${__dirname}/public`)); //ch66 serving static files
+
 
 //Ch58 Creating Our Own Middleware
 //every request will go through this middleware function (order matters)
