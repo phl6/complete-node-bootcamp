@@ -1,6 +1,9 @@
 const fs = require('fs');
 const express = require('express');
 const morgan = require('morgan');
+const {
+    allowedNodeEnvironmentFlags
+} = require('process');
 
 const app = express();
 app.use(express.json()); //ch53, express.json() is a middleware that handles incoming request data
@@ -178,28 +181,38 @@ const deleteUser = (req, res) => {
 // app.delete('/api/v1/tours/:id', deleteTour); //Ch56 Handling DELETE Request
 
 //Further Refactor
+//Ch62 Creating and Mounting Multiple Routers
+//New Routers
+const tourRouter = express.Router();
+const userRouter = express.Router();
+
 //Routes
-app
-    .route('/api/v1/tours')
+tourRouter
+    .route('/')
     .get(getAllTours)
     .post(createTour);
 
-app
-    .route('/api/v1/tours/:id')
+tourRouter
+    .route('/:id')
     .get(getTour)
     .patch(updateTour)
     .delete(deleteTour);
 
-app
-    .route('/api/v1/users')
+//Ch61 Implementing the "Users" Routes
+userRouter
+    .route('/')
     .get(getAllUsrs)
     .post(createUser);
 
-app
-    .route('/api/v1/users/:id')
+userRouter
+    .route('/:id')
     .get(getUser)
     .patch(updateUser)
     .delete(deleteUser);
+
+//Middleware
+app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/users', userRouter);
 
 //----------------
 //4) Start Server
