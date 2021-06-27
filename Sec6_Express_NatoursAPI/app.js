@@ -1,8 +1,17 @@
 const fs = require('fs');
 const express = require('express');
+const morgan = require('morgan');
 
 const app = express();
 app.use(express.json()); //ch53, express.json() is a middleware that handles incoming request data
+
+//---------------
+//1) Middlewares
+//---------------
+
+//Ch59 Using Third Party Middleware
+app.use(morgan('dev'));
+
 
 //Ch58 Creating Our Own Middleware
 //every request will go through this middleware function (order matters)
@@ -16,9 +25,9 @@ app.use((req, res, next) => {
     next();
 })
 
-//---------------
-//Top-Level Code
-//---------------
+//-----------------------------------
+//2) Route Handlers & Top-Level Code
+//-----------------------------------
 //Read tours data before the route handler
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 
@@ -125,7 +134,7 @@ const deleteTour = (req, res) => {
 };
 
 //---------------
-// Routing      
+//3) Routes  
 //---------------
 //Refactored
 // app.get('/api/v1/tours', getAllTours); //Ch52 Handling GET Requests
@@ -147,6 +156,10 @@ app
     .patch(updateTour)
     .delete(deleteTour);
 
+
+//----------------
+//4) Start Server
+//----------------
 const port = 3000;
 app.listen(port, () => {
     console.log(`App running on port ${port}... `);
