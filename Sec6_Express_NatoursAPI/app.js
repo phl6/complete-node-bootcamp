@@ -1,48 +1,34 @@
 const fs = require('fs');
 const express = require('express');
-const {
-    emitKeypressEvents
-} = require('readline');
 
 const app = express();
 app.use(express.json()); //ch53, express.json() is a middleware that handles incoming request data
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// INTRODUCTION
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Ch50 - Setting up Express and Basic Routing
-//demo of using express to handle get requests
-// app.get('/', (req, res) => {
-//     // res.status(200).send('Hello from the server side!');
-//     res.status(200).json({
-//         message: 'Hello from the server side!',
-//         app: 'Natours'
-//     });
-// });
+//Ch58 Creating Our Own Middleware
+//every request will go through this middleware function (order matters)
+app.use((req, res, next) => {
+    console.log('Hello from the middleware 👋');
+    next();
+});
 
-// app.post('/', (req, res) => {
-//     res.status(200).send('You can post to this endpoint...');
-// });
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Real Parts
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+app.use((req, res, next) => {
+    req.requestTime = new Date().toISOString();
+    next();
+})
 
 //---------------
 //Top-Level Code
 //---------------
-
 //Read tours data before the route handler
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`));
 
-//---------------
-// Routing      
-//---------------
-
 //Ch57 Refactoring Our Routes
 const getAllTours = (req, res) => {
+    console.log(req.requestTime);
+
     res.status(200).json({ //Jsend JSON Formatting Standard
         status: 'success',
+        requestedAt: req.requestTime, //Ch58 Creating Our Own Middleware
         results: tours.length, //better visualisation for requesters
         data: { //Enveloping the data
             tours
@@ -138,6 +124,9 @@ const deleteTour = (req, res) => {
 
 };
 
+//---------------
+// Routing      
+//---------------
 //Refactored
 // app.get('/api/v1/tours', getAllTours); //Ch52 Handling GET Requests
 // app.get('/api/v1/tours/:id', getTour); //Ch54 Responding to URL Parameters
@@ -146,6 +135,7 @@ const deleteTour = (req, res) => {
 // app.delete('/api/v1/tours/:id', deleteTour); //Ch56 Handling DELETE Request
 
 //Further Refactor
+//Routes
 app
     .route('/api/v1/tours')
     .get(getAllTours)
@@ -161,3 +151,33 @@ const port = 3000;
 app.listen(port, () => {
     console.log(`App running on port ${port}... `);
 });
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// INTRODUCTION
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Ch50 - Setting up Express and Basic Routing
+//demo of using express to handle get requests
+// app.get('/', (req, res) => {
+//     // res.status(200).send('Hello from the server side!');
+//     res.status(200).json({
+//         message: 'Hello from the server side!',
+//         app: 'Natours'
+//     });
+// });
+
+// app.post('/', (req, res) => {
+//     res.status(200).send('You can post to this endpoint...');
+// });
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Real Parts
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
