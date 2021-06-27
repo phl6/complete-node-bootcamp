@@ -16,6 +16,17 @@ exports.checkID = (req, res, next, val) => {
     next();
 };
 
+// ch65 chaining multiple middleware functions
+exports.checkBody = (req, res, next) => {
+    if (!req.body.name || !req.body.price) {
+        return res.status(400).json({
+            status: 'fail',
+            message: 'Missing name or price'
+        });
+    }
+    next();
+};
+
 //Router Handlers
 //Ch57 Refactoring Our Routes
 exports.getAllTours = (req, res) => {
