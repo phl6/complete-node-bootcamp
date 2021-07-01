@@ -24,7 +24,8 @@ mongoose.connect(DB, {
 });
 
 //ch84 creating a simple tour model
-const tourSchema = new mongoose.Schema({ //defining a schema of a model
+//defining a schema of a model
+const tourSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'A tour must have a name'], //validator
@@ -40,7 +41,20 @@ const tourSchema = new mongoose.Schema({ //defining a schema of a model
     }
 });
 
-const Tour = mongoose.model('Tour', tourSchema);
+const Tour = mongoose.model('Tour', tourSchema); //creating the model 'Tour'
+
+//ch85 creating documents and testing the model
+const testTour = new Tour({ //testTour is an instance of 'Tour' Model
+    name: 'The Park Camper',
+    price: 997
+
+});
+
+testTour.save().then(doc => { //save the document to the db
+    console.log(doc);
+}).catch(err => {
+    console.log('Error: ', err);
+});
 
 //STARTING THE SERVER
 const port = process.env.PORT || 3000;
