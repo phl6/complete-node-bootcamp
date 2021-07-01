@@ -3,9 +3,9 @@ const morgan = require('morgan');
 const app = express();
 
 //Middlewares
-console.log(process.env.NODE_ENV); //ch67 Environment Variables
+console.log(process.env.NODE_ENV); //ch67 Environment Variables, once defined in upper layer, e.g. server.js, process.env can be retrieved here too
 if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev')); //Ch59 Using Third Party Middleware
+    app.use(morgan('dev')); //Ch59 Using Third Party Middleware, ***Morgan is a logger (middleware)***
 }
 
 app.use(express.json()); //ch53, express.json() is a middleware that handles incoming request data
